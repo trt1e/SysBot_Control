@@ -3,8 +3,6 @@
 [![Discord Bots](https://img.shields.io/badge/Discord-Bot-blue.svg)](https://discord.com/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-brightgreen)](https://www.python.org/)
 
-![Bot Logo]([bot_logo.png](https://www.freepik.com/premium-vector/cyber-security-icon-comic-style-padlock-locked-vector-cartoon-illustration-white-isolated-background-closed-password-business-concept-splash-effect_39009262.htm))
-
 ## About
 
 My Discord Bot is a versatile and customizable Discord bot built with Python using the Discord.py library. This bot offers a range of features, including moderation tools, fun commands, and more.
@@ -33,7 +31,8 @@ My Discord Bot is a versatile and customizable Discord bot built with Python usi
   - `!commands` - View descriptions of all available commands.
   - `!deepdive` - Get detailed information about a specific command.
  
-    With more to come...
+
+With more commands to come...
 
 ## Installation
 
