@@ -1,8 +1,7 @@
 pip install discord.py
 pip install asyncio
-pip install psutil
 pip install keyboard
-pip install wavelink
-pip install pyaudio
+pip install psutil
+pip install pyttsx3
+pip install opencv-python
 pip install pillow
-pip install numpy
