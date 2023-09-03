@@ -614,4 +614,4 @@ async def restart(ctx):
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
 
-bot.run('MTE0NTY0MjQ4NTM4NTc5MzU0Ng.GMc6oK.Tj32gfrzCnFa95PeG42Yx1XsJrTi4OikOtRPCA')
+bot.run('YOUR_TOKEN_HERE')
