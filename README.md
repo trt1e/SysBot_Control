@@ -1,4 +1,4 @@
-# My Discord Bot
+# SysBot Control
 
 [![Discord Bots](https://img.shields.io/badge/Discord-Bot-blue.svg)](https://discord.com/)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-brightgreen)](https://www.python.org/)
