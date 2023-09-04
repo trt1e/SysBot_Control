@@ -5,5 +5,4 @@ pip install psutil
 pip install pyttsx3
 pip install opencv-python
 pip install pillow
-
 pip install pyperclip

